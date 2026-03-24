@@ -1,1 +1,0 @@
-# nirajpatil3d.github.io

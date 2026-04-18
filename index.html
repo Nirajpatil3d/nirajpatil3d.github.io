@@ -23,6 +23,7 @@
   body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; cursor: none; }
   .cursor { position: fixed; width: 12px; height: 12px; background: var(--purple); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; }
   .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.2s, height 0.2s, opacity 0.2s; opacity: 0.5; }
+  .cursor-trail { position: fixed; width: 6px; height: 6px; background: var(--purple); border-radius: 50%; pointer-events: none; z-index: 9996; transform: translate(-50%,-50%); opacity: 0; }
   body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
   body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.4; pointer-events: none; z-index: 0; }
   section, nav, footer { position: relative; z-index: 1; }
@@ -109,13 +110,14 @@
   .about-hex-ring { position: absolute; width: 320px; height: 320px; border: 1px solid var(--border); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: rotate-ring 20s linear infinite; }
   @keyframes rotate-ring { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
   #contact { padding: 100px 60px 120px; }
-  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .contact-grid { display: grid; grid-template-columns: 1fr; gap: 40px; max-width: 600px; }
   .contact-intro h2 { margin-bottom: 20px; }
   .contact-intro p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; font-weight: 300; margin-bottom: 36px; }
   .contact-links { display: flex; flex-direction: column; gap: 12px; }
-  .contact-link { display: flex; align-items: center; gap: 14px; color: var(--text); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.05em; padding: 14px 18px; border: 1px solid var(--border); transition: border-color 0.2s, background 0.2s; cursor: none; }
+  .contact-link { display: flex; align-items: center; gap: 14px; color: var(--text); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.05em; padding: 20px 20px; border: 1px solid var(--border); transition: border-color 0.2s, background 0.2s; cursor: none; margin-bottom: 2px; }
   .contact-link:hover { border-color: var(--purple); background: var(--purple-glow); color: var(--purple); }
-  .contact-link-icon { width: 32px; height: 32px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--purple); }
+  .contact-link-icon { width: 32px; height: 32px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--purple); flex-shrink: 0; }
+  .contact-link-icon img { width: 18px; height: 18px; object-fit: contain; filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(240deg); }
   .contact-form { display: flex; flex-direction: column; gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 0.67rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
@@ -128,11 +130,22 @@
   .footer-logo { font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 900; color: var(--purple); letter-spacing: 0.1em; }
   .footer-copy { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
   .footer-tagline { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  #loader { position: fixed; inset: 0; background: var(--bg); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity 0.6s ease, visibility 0.6s ease; }
+  #loader.hide { opacity: 0; visibility: hidden; }
+  .loader-logo { font-family: 'Orbitron', monospace; font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; letter-spacing: 0.15em; background: linear-gradient(90deg, var(--purple), var(--violet), #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: loader-pulse 1.5s ease-in-out infinite; }
+  @keyframes loader-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .loader-bar-bg { width: 200px; height: 2px; background: var(--border); overflow: hidden; }
+  .loader-bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple-dim), var(--purple)); animation: loader-fill 1.8s ease forwards; }
+  @keyframes loader-fill { from{width:0} to{width:100%} }
+  .loader-text { font-size: 0.65rem; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; font-family: 'Orbitron', monospace; }
   .fade-up { opacity: 0; transform: translateY(24px); animation: fade-up 0.8s ease forwards; }
   @keyframes fade-up { to{opacity:1;transform:translateY(0)} }
   .delay-1{animation-delay:0.1s} .delay-2{animation-delay:0.25s} .delay-3{animation-delay:0.4s} .delay-4{animation-delay:0.55s} .delay-5{animation-delay:0.7s}
   .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease,transform 0.7s ease; }
   .reveal.visible { opacity:1; transform:translateY(0); }
+  #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--purple-dim), var(--purple), #e879f9); z-index: 9997; width: 0%; box-shadow: 0 0 8px var(--purple); }
+  #back-top { position: fixed; bottom: 32px; right: 32px; width: 44px; height: 44px; background: linear-gradient(135deg, var(--purple-dim), var(--purple)); border: none; cursor: none; color: #fff; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); box-shadow: 0 0 20px rgba(168,85,247,0.4); }
+  #back-top.show { opacity: 1; transform: translateY(0); }
   @media(max-width:900px){
     nav{padding:16px 24px;} .nav-links{display:none;}
     #hero,#showreel,#projects,#about,#contact{padding-left:24px;padding-right:24px;}
@@ -143,11 +156,14 @@
 </style>
 </head>
 <body>
+<div id="loader"><div class="loader-logo">TheNEXUS</div><div class="loader-bar-bg"><div class="loader-bar-fill"></div></div><div class="loader-text">Loading Portfolio...</div></div>
+<div id="scroll-progress"></div>
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav>
-  <a class="nav-logo" href="#hero">NP<span>_ARTS</span></a>
+  <a class="nav-logo" href="#hero">The<span>NEXUS</span></a>
   <ul class="nav-links">
     <li><a href="#showreel">Showreel</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -294,27 +310,21 @@
     <div class="section-line"></div>
   </div>
   <div class="contact-grid">
-    <div class="contact-intro reveal">
-      <h2 style="margin-bottom:20px;">Let's <span>Work Together</span></h2>
-      <p>Have a project in mind? Looking to collaborate or hire? I'd love to hear from you. Fill out the form or reach me through any of the channels below.</p>
-      <div class="contact-links">
-        <a href="mailto:nirajpp2604@gmail.com" class="contact-link"><div class="contact-link-icon">✉</div>nirajpp2604@gmail.com</a>
-        <a href="https://www.artstation.com/voyager_10" target="_blank" class="contact-link"><div class="contact-link-icon">🎨</div>ArtStation — voyager_10</a>
-        <a href="https://drive.google.com/drive/folders/1-yjCtMsfq4VbYsRoqwx7wAjhREYI3HmE?usp=sharing" target="_blank" class="contact-link"><div class="contact-link-icon">▶</div>View All My Work</a>
-      </div>
+  
     </div>
     <div class="contact-form reveal">
-      <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-input" placeholder="John Doe"/></div>
-      <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" placeholder="hello@example.com"/></div>
-      <div class="form-group"><label class="form-label">Project Type</label><input type="text" class="form-input" placeholder="Environment Art, 3D Modelling..."/></div>
-      <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Tell me about your project..."></textarea></div>
-      <button class="form-submit">Send Message →</button>
+      <a href="mailto:nirajpp2604@gmail.com" class="contact-link"><div class="contact-link-icon">✉</div>nirajpp2604@gmail.com</a>
+      <a href="https://www.artstation.com/voyager_10" target="_blank" class="contact-link"><div class="contact-link-icon">🎨</div>ArtStation — voyager_10</a>
+      <a href="https://www.linkedin.com/in/niraj-patil-5a73b4261/" target="_blank" class="contact-link"><div class="contact-link-icon">💼</div>LinkedIn — Niraj Patil</a>
+      <a href="https://www.instagram.com/_pixelgarage.3d" target="_blank" class="contact-link"><div class="contact-link-icon">📸</div>Instagram — _pixelgarage.3d</a>
+      <a href="https://drive.google.com/drive/folders/1-yjCtMsfq4VbYsRoqwx7wAjhREYI3HmE?usp=sharing" target="_blank" class="contact-link"><div class="contact-link-icon">▶</div>View All My Work</a>
+      <a href="https://drive.google.com/file/d/11OjSWvdJe039Ke_pWJuye4fd1KHx4lwq/view?usp=drive_link" target="_blank" class="contact-link" style="border-color:var(--purple);background:var(--purple-glow);"><div class="contact-link-icon">📄</div>View Resume</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">NP_ARTS</div>
+  <div class="footer-logo">TheNEXUS</div>
   <div class="footer-copy">© 2026 Niraj Patil. All rights reserved.</div>
   <div class="footer-tagline">Crafting worlds, one polygon at a time</div>
 </footer>
@@ -329,6 +339,28 @@
     el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.opacity='0.8';});
     el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='0.5';});
   });
+  window.addEventListener('load', () => { setTimeout(() => { document.getElementById('loader').classList.add('hide'); }, 1800); });
+  window.addEventListener('scroll', () => {
+    const s = document.documentElement;
+    const prog = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+    document.getElementById('scroll-progress').style.width = prog + '%';
+    document.getElementById('back-top').classList.toggle('show', s.scrollTop > 400);
+  });
+  const trails = [];
+  for(let i=0;i<6;i++){const t=document.createElement('div');t.className='cursor-trail';document.body.appendChild(t);trails.push({el:t,x:0,y:0});}
+  let trailMx=0,trailMy=0;
+  document.addEventListener('mousemove',e=>{trailMx=e.clientX;trailMy=e.clientY;});
+  (function animTrail(){
+    let px=trailMx,py=trailMy;
+    trails.forEach((t,i)=>{
+      const nx=px+(t.x-px)*0.4,ny=py+(t.y-py)*0.4;
+      t.x=nx;t.y=ny;px=nx;py=ny;
+      t.el.style.left=t.x+'px';t.el.style.top=t.y+'px';
+      t.el.style.opacity=String((trails.length-i)/trails.length*0.4);
+      t.el.style.transform='translate(-50%,-50%) scale('+String(1-(i*0.12))+')';
+    });
+    requestAnimationFrame(animTrail);
+  })();
   const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
   document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 </script>
